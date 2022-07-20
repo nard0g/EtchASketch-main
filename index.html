@@ -22,7 +22,15 @@
             <input type="range" min="1" max="64" step="1" class="slider" id="controlPixels" value="16">
             <p>Pixels per side: <span id="pixelsPerSide"></span></p>
         </div>
-        <button class="clearCanvasButton">Clear Canvas</button>
+        <div class="controlsSecondRow">
+            <button class="clearCanvasButton">Clear Canvas</button>
+            <div>
+                <input class="colorPicker" type="color" value="#000000">
+                <label for="brushColor">Color</label>
+            </div>
+            <button class="rainbow">Random</button>
+        </div>
+        
     </div>
 
     <footer>Copywrite Me&copy 2022</footer>
