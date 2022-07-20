@@ -1,0 +1,29 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.drawingCanvas {
+    background-color: white;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    height: 80vh;
+    width: 80vh;
+    margin: 2rem;
+
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.pixel {
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+}
+
+
+
+.pixel:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: .5s;
+}
