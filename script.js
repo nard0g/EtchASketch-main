@@ -47,3 +47,4 @@ clearCanvasButton.addEventListener('click', () => {
   addPixels(slider.value);
 });
 
+
