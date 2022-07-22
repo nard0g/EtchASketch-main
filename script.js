@@ -1,13 +1,16 @@
 let defaultPixelDensity = 16;
 let brushColor = "#000000";
+let rainbowMode = false;
+let rainbowGradient = "linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)";
 
 const drawingCanvas = document.querySelector(".drawingCanvas");
-const clearCanvasButton = document.querySelector(".clearCanvasButton");
+const clearCanvasButton = document.querySelector("#clearCanvasButton");
 let canvasWidth = drawingCanvas.offsetWidth;
-let canvasHeight = drawingCanvas.offsetHeight;
 const colorPicker = document.querySelector(".colorPicker");
-const rainbowButton = document.querySelector(".rainbow");
-
+const randomColorButton = document.querySelector(".randomColor");
+const rainbowModeButton = document.querySelector(".rainbowMode");
+const header = document.querySelector(".header");
+const footer = document.querySelector(".footer");
 
 
 // Canvas Controls
@@ -21,24 +24,71 @@ sliderOutput.innerHTML = slider.value; // Display the default slider value
 slider.oninput = function() {
   sliderOutput.innerHTML = this.value;
   buildCanvas(slider.value);
-}
+};
 
-// Brush Color
-rainbowButton.addEventListener("click", () => {
-  brushColorInt = Math.floor(Math.random()*16777215).toString(16); //Generate random color
-  brushColor = `#${(brushColorInt.padStart(6, '0'))}`
-  colorPicker.value = brushColor;
+
+randomColorButton.addEventListener("click", () => {
+  removeRainbowUI();
+  randomizeColor();
+  rainbowMode = false;
 });
 
+function setUItoBrushColor() {
+  header.style.backgroundColor = brushColor;
+  footer.style.backgroundColor = brushColor;
+  clearCanvasButton.style.backgroundColor = brushColor;
+  randomColorButton.style.backgroundColor = brushColor;
+  rainbowModeButton.style.backgroundColor = brushColor;
+};
+
+function randomizeColor() {
+  brushColorInt = Math.floor(Math.random()*16777215).toString(16); //Generate random color
+  brushColor = `#${(brushColorInt.padStart(6, '0'))}`;
+  colorPicker.value = brushColor;
+  setUItoBrushColor();
+};
+
+// Toggle rainbowMode when button pressed
+rainbowModeButton.addEventListener("click", () => {
+  rainbowMode = !rainbowMode;
+  checkRainbowMode(rainbowMode);
+});
+
+function checkRainbowMode(rainbowMode) {
+  if (rainbowMode) {
+    addRainbowToUI();
+  } else {
+    removeRainbowUI();
+  };
+};
+
+function addRainbowToUI() {
+  header.style.backgroundImage = rainbowGradient;
+  footer.style.backgroundImage = rainbowGradient;
+  clearCanvasButton.style.backgroundImage = rainbowGradient;
+  randomColorButton.style.backgroundImage = rainbowGradient;
+  rainbowModeButton.style.backgroundImage = rainbowGradient;
+};
+
+function removeRainbowUI() {
+  header.style.removeProperty("background-image");
+  footer.style.removeProperty("background-image");
+  clearCanvasButton.style.removeProperty("background-image");
+  randomColorButton.style.removeProperty("background-image");
+  rainbowModeButton.style.removeProperty("background-image");
+};
+
 // Color Picker
-//colorPicker.addEventListener("input", updateFirst, false);
 colorPicker.addEventListener("change", watchColorPicker, false);
 
 function watchColorPicker(event) {
   document.querySelectorAll("p").forEach(function(p) {
+    rainbowMode = false;
     brushColor = event.target.value;
+    setUItoBrushColor();
+    removeRainbowUI();
   });
-}
+};
 
 
 // Create pixels on the drawingCanvas
@@ -51,32 +101,29 @@ function addPixels(pixelDensity) {
     for (let pixelInRow = slider.value; pixelInRow > 0; pixelInRow--) {
       const pixel = document.createElement("div");
       pixel.classList.add("pixel");
-      //pixel.style.height = `${((canvasHeight - 2) / pixelDensity)}px"`;
       pixel.style.width = `${(canvasWidth / slider.value)}px`;
       canvasRow.append(pixel);
       
       // Draw pixels on drawingCanvas
-      pixel.addEventListener("click", function (e) {
-        e.target.style.backgroundColor = brushColor;
+      pixel.addEventListener("mouseover", function (e) {
+        if (rainbowMode) {
+          randomizeColor();
+        }
+        e.target.style.backgroundColor = brushColor;       
       });
-
-
     };
   };
 };
 
 
-
-
-
 function clearCanvas() {
   drawingCanvas.innerHTML = "";
-}
+};
 
 function buildCanvas(pixelDensity) {
   clearCanvas();
   addPixels(pixelDensity);
-}
+};
 
 buildCanvas(defaultPixelDensity);
 
